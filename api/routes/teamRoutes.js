@@ -71,9 +71,7 @@ router.delete('/:id', ensureOwner, (req, res) => {
 // POST /api/teams/:teamID/pokemons/:pokemonId - Ajouter un pokémon à une équipe
 // todo ajouter vérification que l'utilisateur ets bien le propriétaire
 router.post('/:teamId/pokemons/:pokemonId', ensureOwner, (req, res) => {
-    console.log('entering updatefunction');
   const { pokemonId, teamId } = req.params;
- console.log('entre dans le router');
   TeamController.addPokemonToTeam(teamId, pokemonId)
     .then(() => {
       res.json({ message: 'Pokemon added to team successfully' });

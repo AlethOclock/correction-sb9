@@ -39,7 +39,6 @@ export default class TeamController {
       const teamWithId = { ...teamData, id: nextId };
       // Ajouter le User ID à l'équipe créée
       teamWithId.userId = userId;
-      console.log(teamWithId);
       const newTeam = await Team.create(teamWithId);
       return newTeam;
     } catch (error) {
@@ -78,10 +77,9 @@ export default class TeamController {
   }
   static async addPokemonToTeam(teamId, pokemonId) {
     try {
-      console.log(teamId);
       const team = await Team.findByPk(teamId);
       if (!team) {
-        throw new Error('Team not found finded');
+        throw new Error('Team not found');
       }
       // Service de vérification d'absence du Pokémon dans la team pour éviter les doublons
       if (await TeamService.checkPokemonAlreadyInTeam(teamId, pokemonId)) {

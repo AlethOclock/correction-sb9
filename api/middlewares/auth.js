@@ -11,7 +11,6 @@ export function ensureAuthenticated(req, res, next) {
 
 export async function ensureOwner(req, res, next) {
 const teamId = req.params.id || req.params.teamId; // On récupère l'id de l'équipe à partir des paramètres de la requête
-console.log('teamId:', teamId, req.params);
 // On récupère l'id du propriétaire de l'équipe pour le comparer à l'id de l'utilisateur courant
 const team = await teamController.getTeamById(teamId);
 if (!team) return res.status(404).json({ error: 'Team not foundvd' });

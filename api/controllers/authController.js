@@ -9,7 +9,6 @@ export default class AuthController {
         const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
         try {
             userData.password = hashedPassword;
-            console.log('Registering user with data:', userData.password); // Debug log
             const newUser = await User.create(userData);
             return newUser;
         } catch (error) {
@@ -38,7 +37,6 @@ export default class AuthController {
             }
             // À implémenter : génération de token JWT
             // ?   
-            console.log(user.id);
             return user;
         }
         catch (error) {
@@ -46,15 +44,7 @@ export default class AuthController {
             throw error;
         }
     }
-    static async logout() {
-        // ou si JWT en place : invalidation du token JWT
-   req.session.destroy(err => {
-  if (err) return res.status(500).send();
-  res.clearCookie('connect.sid'); // nom par défaut
-  res.status(200).send();
-});
-        return { message: 'Logout - To be implemented' };
-    }
+
     static async deleteUser(id) {
         try {
             const user = await User.findByPk(id);

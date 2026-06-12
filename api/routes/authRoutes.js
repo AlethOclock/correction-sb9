@@ -32,13 +32,14 @@ router.post('/login', (req, res) => {
 });
  // POST /api/auth/logout - Déconnexion d'un utilisateur
 router.post('/logout', (req, res) => {
-  AuthController.logout()
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.status(500).json({ error: error.message });
-    });
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Logout error:', err);
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.clearCookie('connect.sid');
+    return res.status(200).json({ message: 'Logged out' });
+  });
 });
 
 
