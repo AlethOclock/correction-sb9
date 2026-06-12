@@ -1,6 +1,5 @@
 import { Router } from "express";
-// À implémenter plus tard
-// import AuthController from '../controllers/authController.js';
+import AuthController from '../controllers/authController.js';
 
 const router = Router();
 
@@ -11,14 +10,56 @@ const router = Router();
 
 // POST /api/auth/register - Inscription d'un nouvel utilisateur
 router.post('/register', (req, res) => {
-  // À implémenter : AuthController.register()
-  res.json({ message: 'POST register - À implémenter' });
+  AuthController.register(req.body)
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
 // POST /api/auth/login - Connexion d'un utilisateur
 router.post('/login', (req, res) => {
-  // À implémenter : AuthController.login()
-  res.json({ message: 'POST login - À implémenter' });
+  AuthController.login(req.body)
+    .then(user => {
+      res.json(user);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
+ // POST /api/auth/logout - Déconnexion d'un utilisateur
+router.post('/logout', (req, res) => {
+  AuthController.logout()
+    .then(result => {
+      res.json(result);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
+
+// ! Pour administration, à sécuriser
+router.get('/', (req, res) => {
+AuthController.getAllUsers()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
+
+// DELETE /api/auth/:id - Suppression d'un utilisateur
+router.delete('/:id', (req, res) => {
+  AuthController.deleteUser(req.params.id)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
 export default router;  

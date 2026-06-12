@@ -34,16 +34,6 @@ export async function seedDatabase() {
         );
         await sequelize.query(seedingSQL);
 
-        // Réinitialiser les séquences à partir du dernier ID de chaque table
-        await sequelize.query(`
-            SELECT setval(pg_get_serial_sequence('"pokemon"', 'id'), (SELECT MAX(id) FROM "pokemon") + 1);
-            SELECT setval(pg_get_serial_sequence('"type"', 'id'), (SELECT MAX(id) FROM "type") + 1);
-            SELECT setval(pg_get_serial_sequence('"team"', 'id'), (SELECT MAX(id) FROM "team") + 1);
-            SELECT setval(pg_get_serial_sequence('"pokemon_type"', 'id'), (SELECT MAX(id) FROM "pokemon_type") + 1);
-            SELECT setval(pg_get_serial_sequence('"team_pokemon"', 'id'), (SELECT MAX(id) FROM "team_pokemon") + 1);
-            SELECT setval(pg_get_serial_sequence('"user"', 'id'), (SELECT MAX(id) FROM "user") + 1);
-        `);
-
         console.log('Database seeded successfully from SQL files!');
     } catch (error) {
         console.error('Error seeding database:', error);

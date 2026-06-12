@@ -2,6 +2,7 @@ import { Pokemon, Team, Type } from '../models/index.js';
 import SequenceService from '../services/sequenceService.js';
 import TeamService from '../services/teamService.js';
 
+
 export default class TeamController {
   static async getAllTeams() {
     try {
@@ -35,7 +36,10 @@ export default class TeamController {
 
       // Ajouter l'ID aux données
       const teamWithId = { ...teamData, id: nextId };
-
+      // Ajouter le User ID à l'équipe créée
+      // récupérer le user id stocké dans la session
+      const userId = req.session.userId;
+      teamWithId.userId = userId;
       const newTeam = await Team.create(teamWithId);
       return newTeam;
     } catch (error) {

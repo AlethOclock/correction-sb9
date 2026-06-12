@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import TeamController from '../controllers/teamController.js';
+import { ensureAuthenticated } from '../middlewares/auth.js';
 
+// Exemple d'intégration d'un middleware dans la route
+// router.get('/teams/:id', ensureAuthenticated, TeamController.getTeamById);
 const router = Router();
 
 /**
@@ -31,7 +34,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/teams - Créer une nouvelle équipe
-router.post('/', (req, res) => {
+router.post('/', ensureAuthenticated, (req, res) => {
   TeamController.createTeam(req.body)
     .then(newTeam => {
       res.status(201).json(newTeam);
@@ -42,7 +45,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/teams/:id - Modifier une équipe
-router.put('/:id', (req, res) => {
+router.put('/:id', ensureAuthenticated, (req, res) => {
   TeamController.updateTeam(req.params.id, req.body)
     .then(updatedTeam => {
       res.json(updatedTeam);
@@ -53,7 +56,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/teams/:id - Supprimer une équipe
-router.delete('/:id', (req, res) => {
+router.delete('/:id', ensureAuthenticated, (req, res) => {
   TeamController.deleteTeam(req.params.id)
     .then(() => {
       res.json({ message: 'Team deleted successfully' });
@@ -65,7 +68,8 @@ router.delete('/:id', (req, res) => {
 
 
 // POST /api/teams/:teamID/pokemons/:pokemonId - Ajouter un pokémon à une équipe
-router.post('/:teamId/pokemons/:pokemonId', (req, res) => {
+// todo ajouter vérification que l'utilisateur ets bien le propriétaire
+router.post('/:teamId/pokemons/:pokemonId', ensureAuthenticated, (req, res) => {
   const { pokemonId, teamId } = req.params;
   // Ajouter un test pour vérifier que le Pokémon n'est pas déjà dans l'équipe et qu'il n'y a pas déjà 6 Pokémons
   TeamController.addPokemonToTeam(teamId, pokemonId)
