@@ -34,12 +34,12 @@ Type.belongsToMany(Pokemon, {
 });
 
 User.hasMany(Team, {
-    foreignKey: "user_id",
+    foreignKey: { name: 'userId', field: 'user_id' },
     as: "teams"
 });
 
 Team.belongsTo(User, {
-    foreignKey: "user_id",
+    foreignKey: { name: 'userId', field: 'user_id' },
     as: "user"
 });
 

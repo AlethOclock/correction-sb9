@@ -18,6 +18,7 @@ Team.init({
     description: {
         type: DataTypes.TEXT,
     },
+    
     userId: {
         type: DataTypes.INTEGER,
         allowNull: true,

@@ -14,6 +14,7 @@ export default class TeamController {
     }
   }
   static async getTeamById(id) {
+
     try {
       const team = await Team.findByPk(id, {
         // on ajoute un include pour récupérer les pokémons associés à l'équipe
@@ -77,9 +78,10 @@ export default class TeamController {
   }
   static async addPokemonToTeam(teamId, pokemonId) {
     try {
+      console.log(teamId);
       const team = await Team.findByPk(teamId);
       if (!team) {
-        throw new Error('Team not found');
+        throw new Error('Team not found finded');
       }
       // Service de vérification d'absence du Pokémon dans la team pour éviter les doublons
       if (await TeamService.checkPokemonAlreadyInTeam(teamId, pokemonId)) {

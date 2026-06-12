@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import TeamController from '../controllers/teamController.js';
-import { ensureAuthenticated } from '../middlewares/auth.js';
+import { ensureAuthenticated, ensureOwner } from '../middlewares/auth.js';
 
 // Exemple d'intégration d'un middleware dans la route
 // router.get('/teams/:id', ensureAuthenticated, TeamController.getTeamById);
@@ -35,7 +35,6 @@ router.get('/:id', (req, res) => {
 
 // POST /api/teams - Créer une nouvelle équipe
 router.post('/', ensureAuthenticated, (req, res) => {
-
   TeamController.createTeam(req.user.dataValues.id, req.body)
     .then(newTeam => {
       res.status(201).json(newTeam);
@@ -46,7 +45,8 @@ router.post('/', ensureAuthenticated, (req, res) => {
 });
 
 // PUT /api/teams/:id - Modifier une équipe
-router.put('/:id', ensureAuthenticated, (req, res) => {
+router.put('/:id', ensureOwner, (req, res) => {
+
   TeamController.updateTeam(req.params.id, req.body)
     .then(updatedTeam => {
       res.json(updatedTeam);
@@ -57,7 +57,7 @@ router.put('/:id', ensureAuthenticated, (req, res) => {
 });
 
 // DELETE /api/teams/:id - Supprimer une équipe
-router.delete('/:id', ensureAuthenticated, (req, res) => {
+router.delete('/:id', ensureOwner, (req, res) => {
   TeamController.deleteTeam(req.params.id)
     .then(() => {
       res.json({ message: 'Team deleted successfully' });
@@ -70,9 +70,10 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
 
 // POST /api/teams/:teamID/pokemons/:pokemonId - Ajouter un pokémon à une équipe
 // todo ajouter vérification que l'utilisateur ets bien le propriétaire
-router.post('/:teamId/pokemons/:pokemonId', ensureAuthenticated, (req, res) => {
+router.post('/:teamId/pokemons/:pokemonId', ensureOwner, (req, res) => {
+    console.log('entering updatefunction');
   const { pokemonId, teamId } = req.params;
-  // Ajouter un test pour vérifier que le Pokémon n'est pas déjà dans l'équipe et qu'il n'y a pas déjà 6 Pokémons
+ console.log('entre dans le router');
   TeamController.addPokemonToTeam(teamId, pokemonId)
     .then(() => {
       res.json({ message: 'Pokemon added to team successfully' });

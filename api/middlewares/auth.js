@@ -2,6 +2,7 @@ import express from "express";
 import session from "express-session";
 import TeamService from "../services/teamService.js";
 import { User } from "../models/User.js";
+import teamController from "../controllers/teamController.js";
 
 export function ensureAuthenticated(req, res, next) {
   if (req.session && req.session.userId) return next();
@@ -9,18 +10,17 @@ export function ensureAuthenticated(req, res, next) {
 }
 
 export async function ensureOwner(req, res, next) {
-  const teamId = req.params.teamId;
+const teamId = req.params.id || req.params.teamId; // On récupère l'id de l'équipe à partir des paramètres de la requête
+console.log('teamId:', teamId, req.params);
+// On récupère l'id du propriétaire de l'équipe pour le comparer à l'id de l'utilisateur courant
+const team = await teamController.getTeamById(teamId);
+if (!team) return res.status(404).json({ error: 'Team not foundvd' });
   const userId = req.session.userId;
 
-if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+if (!userId) return res.status(401).json({ error: 'Unauthorized. This team does not belong to you.' });
+    // Si l'Id du user courant est le même que l'id du propriétaire de l'équipe, c'est bon
 
-    // Lazy import pour éviter l'import circulaire au niveau module
-    const TeamServiceModule = await import('../services/teamService.js');
-    const TeamService = TeamServiceModule.default || TeamServiceModule;
-    
-    // Si TeamService renvoie true, l'utilisateur est le propriétaire de l'équipe
-    const owner = await TeamService.isOwner(teamId, userId);
-    if (owner) return next();
+    if (team.userId === parseInt(userId)) return next();     
     return res.status(403).json({ error: 'Forbidden' });
 }
 export async function attachUser(req, res, next) {
