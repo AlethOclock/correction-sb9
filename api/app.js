@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import session from "express-session";
 import { attachUser } from "./middlewares/auth.js";
+import SequeliazeValidationError from "sequelize";
 
 const app = express();
 // ? dotenv.config();
@@ -23,6 +24,13 @@ app.use(session({
     
 }));
 app.use(express.urlencoded({ extended: true }));
+app.use((err, req, res, next) => {
+  if (err && err.name === 'SequelizeValidationError') {
+    return res.status(400).json({ errors: err.errors.map(e => e.message) });
+  }
+  // autres traitements d'erreur...
+  res.status(err.status || 500).json({ error: err.message || 'Internal error' });
+});
 app.use(attachUser); // Middleware pour attacher l'utilisateur à chaque requête
 
 app.use("/api/pokemons", pokemonRoutes);

@@ -12,13 +12,17 @@ Team.init({
     name: {
         type: DataTypes.TEXT,
         allowNull: false,
-        unique: false
+        unique: false,
+        validate: {
+            notEmpty: true,
+            len: [1, 50]
+        }
     },
 
     description: {
         type: DataTypes.TEXT,
     },
-    
+
     userId: {
         type: DataTypes.INTEGER,
         allowNull: true,
