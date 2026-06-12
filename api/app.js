@@ -6,10 +6,15 @@ import pokemonRoutes from "./routes/pokemonRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import session from "express-session";
+import { attachUser } from "./middlewares/auth.js";
 
 const app = express();
+// ? dotenv.config();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // ou le client
+  credentials: true
+}));
 app.use(express.json());
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -17,6 +22,8 @@ app.use(session({
     saveUninitialized: false,
     
 }));
+app.use(express.urlencoded({ extended: true }));
+app.use(attachUser); // Middleware pour attacher l'utilisateur à chaque requête
 
 app.use("/api/pokemons", pokemonRoutes);
 app.use('/api/auth', authRoutes);

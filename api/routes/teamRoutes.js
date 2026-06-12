@@ -35,7 +35,8 @@ router.get('/:id', (req, res) => {
 
 // POST /api/teams - Créer une nouvelle équipe
 router.post('/', ensureAuthenticated, (req, res) => {
-  TeamController.createTeam(req.body)
+
+  TeamController.createTeam(req.user.dataValues.id, req.body)
     .then(newTeam => {
       res.status(201).json(newTeam);
     })

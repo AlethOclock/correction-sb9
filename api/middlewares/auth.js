@@ -1,6 +1,7 @@
 import express from "express";
 import session from "express-session";
 import TeamService from "../services/teamService.js";
+import { User } from "../models/User.js";
 
 export function ensureAuthenticated(req, res, next) {
   if (req.session && req.session.userId) return next();
@@ -21,8 +22,18 @@ if (!userId) return res.status(401).json({ error: 'Unauthorized' });
     const owner = await TeamService.isOwner(teamId, userId);
     if (owner) return next();
     return res.status(403).json({ error: 'Forbidden' });
-
-
+}
+export async function attachUser(req, res, next) {
+  try {
+    if (req.session?.userId) {
+      req.user = await User.findByPk(req.session.userId, { attributes: ['id','username'] });
+    } else {
+      req.user = null;
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
 }
 
 export default { ensureAuthenticated, ensureOwner };

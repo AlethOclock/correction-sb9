@@ -23,6 +23,7 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   AuthController.login(req.body)
     .then(user => {
+      req.session.userId = user.id;
       res.json(user);
     })
     .catch(error => {

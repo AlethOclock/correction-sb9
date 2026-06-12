@@ -1,24 +1,29 @@
 import { Model, DataTypes } from "sequelize";
-    import sequelize from "./sequelizeClient.js";
+import sequelize from "./sequelizeClient.js";
 
-    export class Team extends Model {}
+export class Team extends Model { }
 
-    Team.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        name: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-            unique: false
-        },
+Team.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        unique: false
+    },
 
-        description: {
-            type: DataTypes.TEXT,
-        }
-    }, {
-        sequelize,
-        tableName: "team"
-    });
+    description: {
+        type: DataTypes.TEXT,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'user_id'
+    }
+}, {
+    sequelize,
+    tableName: "team"
+});

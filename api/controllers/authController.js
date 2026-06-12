@@ -38,7 +38,7 @@ export default class AuthController {
             }
             // À implémenter : génération de token JWT
             // ?   
-            req.session.userId = user.id;
+            console.log(user.id);
             return user;
         }
         catch (error) {
@@ -47,7 +47,12 @@ export default class AuthController {
         }
     }
     static async logout() {
-        // À implémenter : invalidation du token JWT côté client ou serveur
+        // ou si JWT en place : invalidation du token JWT
+   req.session.destroy(err => {
+  if (err) return res.status(500).send();
+  res.clearCookie('connect.sid'); // nom par défaut
+  res.status(200).send();
+});
         return { message: 'Logout - To be implemented' };
     }
     static async deleteUser(id) {

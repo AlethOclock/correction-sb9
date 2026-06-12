@@ -29,7 +29,7 @@ export default class TeamController {
       throw error;
     }
   }
-  static async createTeam(teamData) {
+  static async createTeam(userId, teamData) {
     try {
       // Calculer le prochain ID
       const nextId = await SequenceService.getNextId('"team"');
@@ -37,9 +37,8 @@ export default class TeamController {
       // Ajouter l'ID aux données
       const teamWithId = { ...teamData, id: nextId };
       // Ajouter le User ID à l'équipe créée
-      // récupérer le user id stocké dans la session
-      const userId = req.session.userId;
       teamWithId.userId = userId;
+      console.log(teamWithId);
       const newTeam = await Team.create(teamWithId);
       return newTeam;
     } catch (error) {
