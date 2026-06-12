@@ -63,20 +63,31 @@ router.delete('/:id', (req, res) => {
     });
 });
 
-// POST /api/teams/:teamId/pokemons - Ajouter un pokémon à l'équipe
-router.post('/:teamId/pokemons', (req, res) => {
-  // À implémenter : TeamController.addPokemonToTeam()
-  res.json({ message: 'POST add pokemon to team - À implémenter', teamId: req.params.teamId });
+
+// POST /api/teams/:teamID/pokemons/:pokemonId - Ajouter un pokémon à une équipe
+router.post('/:teamId/pokemons/:pokemonId', (req, res) => {
+  const { pokemonId, teamId } = req.params;
+  // Ajouter un test pour vérifier que le Pokémon n'est pas déjà dans l'équipe et qu'il n'y a pas déjà 6 Pokémons
+  TeamController.addPokemonToTeam(teamId, pokemonId)
+    .then(() => {
+      res.json({ message: 'Pokemon added to team successfully' });
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+}); 
+
+// DELETE /api/teams/:teamId/pokemons/:pokemonId - Retirer un pokémon d'une équipe
+router.delete('/:teamId/pokemons/:pokemonId', (req, res) => {
+  const { pokemonId, teamId } = req.params;
+  TeamController.removePokemonFromTeam(teamId, pokemonId)
+    .then(() => {
+      res.json({ message: 'Pokemon removed from team successfully' });
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
-// DELETE /api/teams/:teamId/pokemons/:pokemonId - Retirer un pokémon de l'équipe
-router.delete('/:teamId/pokemons/:pokemonId', (req, res) => {
-  // À implémenter : TeamController.removePokemonFromTeam()
-  res.json({
-    message: 'DELETE remove pokemon from team - À implémenter',
-    teamId: req.params.teamId,
-    pokemonId: req.params.pokemonId,
-  });
-});
 
 export default router;

@@ -42,7 +42,7 @@ export default class PokemonController {
           where: { name: pokemonData.name }
         });
         if (existingPokemon) {
-          throw new Error(`Un Pokémon avec le nom "${pokemonData.name}" existe déjà`);
+          throw new Error(`A Pokemon with the name "${pokemonData.name}" already exists`);
         }
       }
 
@@ -63,48 +63,6 @@ export default class PokemonController {
       return { message: 'Pokemon deleted successfully' };
     } catch (error) {
       console.error('Error deleting pokemon:', error);
-      throw error;
-    }
-  }
-
-
-
-  static async addPokemonToTeam(teamId, pokemonId) {
-    try {
-      const team = await Team.findByPk(teamId);
-      if (!team) {
-        throw new Error('Team not found');
-      }
-      // Service de vérification du nombre de Pokémons dans la team
-      if (!await TeamService.canAddPokemon(teamId)) {
-        console.log(TeamService.getPokemonCount(teamId)); 
-        throw new Error('L\'équipe a déjà 6 pokémons');
-      }
-      const pokemon = await Pokemon.findByPk(pokemonId);
-      if (!pokemon) {
-        throw new Error('Pokemon not found');
-      }
-      await team.addPokemon(pokemon);
-      return { message: 'Pokemon added to team successfully' };
-    } catch (error) {
-      console.error('Error adding pokemon to team:', error);
-      throw error;
-    }
-  }
-  static async removePokemonFromTeam(teamId, pokemonId) {
-    try {
-      const team = await Team.findByPk(teamId);
-      if (!team) {
-        throw new Error('Team not found');
-      }
-      const pokemon = await Pokemon.findByPk(pokemonId);
-      if (!pokemon) {
-        throw new Error('Pokemon not found');
-      }
-      await team.removePokemon(pokemon);
-      return { message: 'Pokemon removed from team successfully' };
-    } catch (error) {
-      console.error('Error removing pokemon from team:', error);
       throw error;
     }
   }

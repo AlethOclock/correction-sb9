@@ -30,6 +30,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// A retirer, on ne doit pas pouvoir créer un Pokémon dans l'état actuel
 router.post('/', (req, res) => {
   PokemonController.createPokemon(req.body)
     .then(newPokemon => {
@@ -40,6 +41,8 @@ router.post('/', (req, res) => {
     });
 });
 
+
+// Non utile car on ne doit pas pouvoir modifier les caractéristiques d'un Pokemon
 router.put('/:id', (req, res) => {
   PokemonController.updatePokemon(req.params.id, req.body)
     .then(updatedPokemon => {
@@ -50,6 +53,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
+// A retirer, on ne doit pas pouvoir supprimer un Pokémon, à moins d'avoir une fonctionnalité ultérieure qui permettrait de faire ses Pokémons custom et les supprimer
 router.delete('/:id', (req, res) => {
   PokemonController.deletePokemon(req.params.id)
     .then(() => {
@@ -60,6 +64,7 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+// POST /api/pokemons/:pokemonId/teams/:teamId - Ajouter un pokémon à une équipe
 router.post('/:pokemonId/teams/:teamId', (req, res) => {
   const { pokemonId, teamId } = req.params;
   PokemonController.addPokemonToTeam(teamId, pokemonId)
@@ -71,6 +76,7 @@ router.post('/:pokemonId/teams/:teamId', (req, res) => {
     });
 }); 
 
+// DELETE /api/pokemons/:pokemonId/teams/:teamId - Retirer un pokémon d'une équipe
 router.delete('/:pokemonId/teams/:teamId', (req, res) => {
   const { pokemonId, teamId } = req.params;
   PokemonController.removePokemonFromTeam(teamId, pokemonId)

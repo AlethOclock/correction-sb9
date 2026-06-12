@@ -53,6 +53,28 @@ export class TeamService {
       throw error;
     }
   }
+
+  static async checkPokemonAlreadyInTeam(teamId, pokemonId) {
+    try {
+      const team = await Team.findByPk(teamId, {
+        include: [{
+          association: 'pokemons',
+          attributes: ['id'],
+          through: { attributes: [] }
+        }]
+      });
+
+      if (!team) {
+        throw new Error('Team not found');
+      }
+
+      const isAlreadyInTeam = team.pokemons.some(pokemon => pokemon.id === parseInt(pokemonId));
+      return isAlreadyInTeam;
+    } catch (error) {
+      console.error('Error checking if pokemon is already in team:', error);
+      throw error;
+    }
+  }
 }
 
 export default TeamService;
