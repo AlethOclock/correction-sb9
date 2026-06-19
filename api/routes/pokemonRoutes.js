@@ -19,6 +19,19 @@ router.get('/', (req, res) => {
     });
 });
 
+// Recherche par nom ou type de pokémon
+// GET /api/pokemons/search?name=...&type=...
+router.get('/search', (req, res) => {
+  const { name, type } = req.query;
+  PokemonController.searchPokemons(name, type)
+    .then(pokemons => {
+      res.json(pokemons);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
+
 // GET /api/pokemons/:id - Récupérer les détails d'un pokémon
 router.get('/:id', (req, res) => {
   PokemonController.getPokemonById(req.params.id)
@@ -30,7 +43,10 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// A retirer, on ne doit pas pouvoir créer un Pokémon dans l'état actuel
+
+
+// Pour l'exemple mais à retirer, on ne doit pas pouvoir créer un Pokémon dans l'état actuel
+// POST /api/pokemons - Créer un nouveau pokémon
 router.post('/', (req, res) => {
   PokemonController.createPokemon(req.body)
     .then(newPokemon => {
@@ -42,7 +58,8 @@ router.post('/', (req, res) => {
 });
 
 
-// Non utile car on ne doit pas pouvoir modifier les caractéristiques d'un Pokemon
+// Pour l'exemple mais à retirer car on ne doit pas pouvoir modifier les caractéristiques d'un Pokemon
+// PUT /api/pokemons/:id - Mettre à jour un pokémon
 router.put('/:id', (req, res) => {
   PokemonController.updatePokemon(req.params.id, req.body)
     .then(updatedPokemon => {
@@ -53,7 +70,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// A retirer, on ne doit pas pouvoir supprimer un Pokémon, à moins d'avoir une fonctionnalité ultérieure qui permettrait de faire ses Pokémons custom et les supprimer
+// Pour l'exemple mais à retirer, on ne doit pas pouvoir supprimer un Pokémon, à moins d'avoir une fonctionnalité ultérieure qui permettrait de faire ses Pokémons custom et les supprimer
+// DELETE /api/pokemons/:id - Supprimer un pokémon
 router.delete('/:id', (req, res) => {
   PokemonController.deletePokemon(req.params.id)
     .then(() => {

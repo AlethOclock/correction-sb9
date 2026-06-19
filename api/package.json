@@ -23,6 +23,6 @@
     "express-session": "^1.19.0",
     "jest": "^30.4.2",
     "pg": "^8.21.0",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.8"
   }
 }

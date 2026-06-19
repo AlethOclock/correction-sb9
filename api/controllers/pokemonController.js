@@ -1,5 +1,6 @@
 import { Pokemon, Team, Type } from '../models/index.js';
 import TeamService from '../services/teamService.js';
+import { Op } from 'sequelize';
 
 export default class PokemonController {
   static async getAllPokemons() {
@@ -66,4 +67,41 @@ export default class PokemonController {
       throw error;
     }
   }
+
+
+  // Recherche de Pokémons par nom ou type.
+  // Contraintes : insensibilité à la casse, correspondance partielle (LIKE), trois caractères minimum, 20 résultats minimum
+static async searchPokemons(name, type) {
+  try {
+    const whereClause = {};
+const include = [{
+  model: Type,
+  as: 'types',
+  through: { attributes: [] },
+  required: !!type // true si on filtre par type => INNER JOIN
+}];
+
+if (name) {
+  const n = String(name).trim();
+  if (n.length < 3) throw new Error('Le nom doit comporter au moins 3 caractères');
+  whereClause.name = { [Op.iLike]: `%${n}%` };
+}
+
+if (type) {
+  include[0].where = { name: { [Op.iLike]: type } };
+}
+
+const pokemons = await Pokemon.findAll({
+  where: whereClause,
+  include,
+  limit: 20,
+  order: [['name', 'ASC']],
+  distinct: true
+});
+    return pokemons;
+  } catch (error) {
+    console.error('Error searching pokemons:', error);
+    throw error;
+  }
+}
 }
