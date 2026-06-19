@@ -5,7 +5,9 @@ import { Type } from './Type.js';
 import { User } from './User.js';
 import { TeamPokemon } from './TeamPokemon.js';
 import { sequelize } from "./sequelizeClient.js";
+import { Favorite } from './Favorite.js';
 
+// On met ici les associations entre les modèles
 Team.belongsToMany(Pokemon, {
     through: TeamPokemon,
     foreignKey: "team_id",
@@ -43,6 +45,18 @@ Team.belongsTo(User, {
     as: "user"
 });
 
+User.belongsToMany(Pokemon, {
+  through: Favorite,
+  foreignKey: 'user_id',
+  otherKey: 'pokemon_id',
+  as: 'favorites'
+});
+Pokemon.belongsToMany(User, {
+  through: Favorite,
+  foreignKey: 'pokemon_id',
+  otherKey: 'user_id',
+  as: 'favoritedBy'
+});
 
 
 export { Pokemon, Team, TeamPokemon, Type, PokemonType, User, sequelize };
