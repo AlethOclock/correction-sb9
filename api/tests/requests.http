@@ -63,7 +63,7 @@ GET {{baseUrl}}/api/teams/1
 DELETE {{baseUrl}}/api/teams/1
 
 ### Ajouter un Pokémon à une équipe
-POST {{baseUrl}}/api/teams/1/pokemons/5
+POST {{baseUrl}}/api/teams/4/pokemons/56
 
 ### Supprimer un Pokémon d'une équipe
 DELETE {{baseUrl}}/api/teams/1/pokemons/5
