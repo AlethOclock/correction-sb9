@@ -119,4 +119,29 @@ export default class TeamController {
       throw error;
     }
   }
+
+  // Calculer le score d'une équipe
+  static async calculateTeamScore(teamId) {
+    try {
+      const team = await Team.findByPk(teamId, {
+        include: [{ 
+          association: 'pokemons',
+          attributes: ['id', 'name', 'hp', 'atk', 'def', 'atk_spe', 'def_spe', 'speed'],
+          through: { attributes: [] } // Exclure les données de la table de liaison
+        }]
+      });
+      if (!team) {
+        throw new Error('Team not found');
+      }
+      // Calculer le score total de l'équipe en additionnant les stats de chaque Pokémon
+      const totalScore = team.pokemons.reduce((acc, pokemon) => {
+        return acc + pokemon.hp + pokemon.atk + pokemon.def + pokemon.atk_spe + pokemon.def_spe + pokemon.speed;
+      }, 0);
+      return totalScore;
+    }
+    catch (error) {
+      console.error('Error calculating team score:', error);
+      throw error;
+    }
+  }
 }

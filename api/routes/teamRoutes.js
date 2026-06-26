@@ -93,5 +93,16 @@ router.delete('/:teamId/pokemons/:pokemonId', (req, res) => {
     });
 });
 
+// GET /api/teams/score/:id - Récupérer le score d'une équipe
+router.get('/score/:id', (req, res) => {
+  TeamController.calculateTeamScore(req.params.id)
+    .then(score => {
+      res.json({ score });
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
+});
+
 
 export default router;
