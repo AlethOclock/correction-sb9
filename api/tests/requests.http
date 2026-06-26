@@ -1,0 +1,97 @@
+@baseUrl = http://localhost:3000
+
+### Santé de l'API
+GET {{baseUrl}}/api/health
+
+
+# Pokémons
+### Liste des Pokémons
+GET {{baseUrl}}/api/pokemons
+
+### Détails d'un Pokémon
+GET {{{baseUrl}}}/api/pokemons/1
+
+# Ne doit normalement pas exister, mais pour l'exemple
+### Supprimer un Pokémon
+DELETE {{baseUrl}}/api/pokemons/1
+
+# Users
+### Inscription
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "Azerty12345"
+}
+
+### Supprimer un utilisateur
+DELETE {{baseUrl}}/api/users/1
+
+### Lister les utilisateurs
+GET {{baseUrl}}/api/users
+
+### Connexion
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "All1ooooa",
+  "password": "All1ooooa"
+}
+
+### Déconnexion
+POST {{baseUrl}}/api/auth/logout
+
+# Equipes
+### Lister les équipes
+GET {{baseUrl}}/api/teams
+
+### Créer une équipe
+POST {{baseUrl}}/api/teams
+Content-Type: application/json
+
+{
+  "name": "Team rocketman",
+  "description": "Ma première team"
+}
+
+### Détails d'une équipe
+GET {{baseUrl}}/api/teams/1
+
+### Supprimer une équipe
+DELETE {{baseUrl}}/api/teams/1
+
+### Ajouter un Pokémon à une équipe
+POST {{baseUrl}}/api/teams/1/pokemons/5
+
+### Supprimer un Pokémon d'une équipe
+DELETE {{baseUrl}}/api/teams/1/pokemons/5
+
+### Modifier une équipe
+PUT http://localhost:3000/api/teams/4
+Content-Type: application/json
+
+{
+  "name": "Team Super coooool",
+  "description": "Ma deuxième team"
+}
+
+### Score de l'équipe
+GET {{baseUrl}}/api/teams/score/1
+
+# Favoris
+### Liste des favoris d'un utilisateur
+GET {{baseUrl}}/api/favorites/1
+
+### Ajouter un favori
+POST {{baseUrl}}/api/favorites/1
+
+### Supprimer un favori
+DELETE {{baseUrl}}/api/favorites/1
+
+### Top 10 des utilisateurs
+GET {{baseUrl}}/api/favorites/
+
+### Comptage de like d'un Pokémon
+GET {{baseUrl}}/api/favorites/pokemon/3
