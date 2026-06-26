@@ -8,6 +8,7 @@ import teamRoutes from "./routes/teamRoutes.js";
 import session from "express-session";
 import { attachUser } from "./middlewares/auth.js";
 import SequeliazeValidationError from "sequelize";
+import favRoutes from "./routes/favRoutes.js";
 
 const app = express();
 // ? dotenv.config();
@@ -36,6 +37,7 @@ app.use(attachUser); // Middleware pour attacher l'utilisateur à chaque requêt
 app.use("/api/pokemons", pokemonRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/teams', teamRoutes);
+app.use('/api/favorites', favRoutes);
 
 // Route principale "/" en dernier pour ne pas écraser les autres
 app.get("/", (req, res) => {

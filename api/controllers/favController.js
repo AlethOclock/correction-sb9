@@ -10,9 +10,10 @@ export default class FavController {
             include: [{
                 model: User,
                 attributes: ['id', 'username'],
-                through: { attributes: [] } // Exclure les attributs de la table de jointure
+                through: { attributes: [] },
+                as: 'favoritedBy'
             }],
-            order: [[User, 'id', 'ASC']] // Trier par ID d'utilisateur
+            order: [[{ model: User, as: 'favoritedBy' }, 'id', 'ASC']]
         });
         return favorites;
     } catch (error) {
@@ -21,35 +22,61 @@ export default class FavController {
     }
   }
 
+  // Récupérer les favoris d'un utilisateur
     static async getMyFavorites(userId) {
     try {
       const user = await User.findByPk(userId, {
-        include: Pokemon
+        include: [{
+          model: Pokemon,
+          as: 'favorites'
+        }]
       });
       if (!user) {
         throw new Error('User not found');
       }
-      return user.Pokemons;
-    } catch (error) {
+      return user.favorites;
+    } catch (error) { 
       console.error('Error fetching favorites:', error);
       throw error;
     }
   }
 
-  static async addFavorite(userId, pokemonId) {
+  // Ajouter un Pokémon en favori pour un utilisateur spécifique
+  static async addFavorite(id, userId) {
+    console.log('bien arrivé au controller');
     try {
+      // On récupère l'utilisateur connecté
+      console.log(userId);
       const user = await User.findByPk(userId);
-      if (!user) {
-        throw new Error('User not found');
+      const pokemon = await Pokemon.findByPk(id);
+      if (!user || !pokemon) {
+        throw new Error('User or Pokemon not found');
       }
-      const pokemon = await Pokemon.findByPk(pokemonId);
-      if (!pokemon) {
-        throw new Error('Pokemon not found');
+      // Vérifier que le favori n'existe pas déjà
+      const hasFavorite = await user.hasFavorite(pokemon);
+      if (hasFavorite) {
+        throw new Error('Pokemon already in favorites');
       }
-      await user.addPokemon(pokemon);
-      return pokemon;
+      await user.addFavorite(pokemon); // Utilisation de la méthode générée par Sequelize pour la relation many-to-many
+      return { message: 'Favorite added successfully' };
     } catch (error) {
       console.error('Error adding favorite:', error);
+      throw error;
+    }
+  }
+
+  // Supprimer un Pokémon des favoris d'un utilisateur spécifique
+  static async removeFavorite(userId, pokemonId) {
+    try {
+      const user = await User.findByPk(userId);
+      const pokemon = await Pokemon.findByPk(pokemonId);
+      if (!user || !pokemon) {
+        throw new Error('User or Pokemon not found');
+      }
+      await user.removePokemon(pokemon); // Utilisation de la méthode générée par Sequelize pour la relation many-to-many
+      return { message: 'Favorite removed successfully' };
+    } catch (error) {
+      console.error('Error removing favorite:', error);
       throw error;
     }
   }

@@ -1,4 +1,4 @@
-import Router from "express";
+import { Router } from "express";
 import FavController from "../controllers/favController.js";
 
 const router = Router();
@@ -29,9 +29,9 @@ router.get('/:userId', (req, res) => {
     });
 });
 
-// POST /api/favorites - Ajouter un favori
-router.post('/', (req, res) => {
-  FavController.addFavorite(req.body)
+// POST /api/favorites/:id - Ajouter un favori
+router.post('/:id', (req, res) => {
+  FavController.addFavorite(req.params.id, req.user.id)
     .then(newFavorite => {
       res.status(201).json(newFavorite);
     })
@@ -50,3 +50,4 @@ router.delete('/:id', (req, res) => {
       res.status(500).json({ error: error.message });
     });       
 });
+export default router;  
