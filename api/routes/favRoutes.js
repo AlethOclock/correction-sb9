@@ -42,12 +42,23 @@ router.post('/:id', (req, res) => {
 
 // DELETE /api/favorites/:id - Supprimer un favori par ID
 router.delete('/:id', (req, res) => {
-  FavController.removeFavorite(req.params.id)
+  FavController.removeFavorite(req.params.id, req.user.id)
     .then(() => {
       res.json({ message: 'Favorite removed successfully' });
     })
     .catch(error => {
       res.status(500).json({ error: error.message });
     });       
+});
+
+// GET /api/favorites/pokemon/:id - Récupérer le nombre de mise en favori d'un Pokémon
+router.get('/pokemon/:id', (req, res) => {
+  FavController.getFavoriteCount(req.params.id)
+    .then(count => {
+      res.json({ count });
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
 });
 export default router;  
